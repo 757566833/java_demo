@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>列表</title>
+    <script>
+    if(!localStorage.isLogin){
+        window.location.href='/login'
+    }
+    </script>
+</head>
+<style>
+.flex{
+    display: flex;
+}
+.w{
+    text-align: center;
+    width: 200px;
+    height: 50px;
+    line-height: 50px;
+}
+</style>
+<body>
+    <h1>列表</h1>
+    <div class='flex'>
+            <div class='w'>序号</div>
+            <div class='w'>公司号</div>
+            <div class='w'>公司名</div>
+            <div class='w'>金额</div>
+            <div class='w'>入库时间</div>
+            </div>
+    <div id="root"></div>
+    <a href="/home">上传excel</a>
+    <script>
+    const getFetch = (url, parameter) => {
+
+let parameterStr = '?';
+if (parameter) {
+    for (const key in parameter) {
+        if (parameter.hasOwnProperty(key)) {
+            parameterStr += (key + '=' + parameter[key] + '&');
+        }
+    }
+}
+parameterStr = parameterStr.substr(0, parameterStr.length - 1);
+return fetch(url + parameterStr, {
+    method: 'get',
+    headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.token },
+    credentials: 'same-origin'
+}).then((response) => {
+    console.log(response);
+    if (response.status == 200) {
+        return response.text();
+    } else {
+        if (response.status == 401) {
+            antdmessage.error('登陆超时,请在主页刷新并重新登录');
+            localStorage.token=''
+        } else {
+            return response.status;
+        }
+    }
+}, (error) => {
+    error.message;
+});
+};    
+
+getFetch('/erp/get-excel').then((res)=>{
+    let data = eval('('+res+')');
+    let str = ''
+    for (const item of data) {
+        str+=`<div class='flex'>
+            <div class='w'>${item.id}</div>
+            <div class='w'>${item.nsh}</div>
+            <div class='w'>${item.qymc}</div>
+            <div class='w'>${item.mse}</div>
+            <div class='w'>${item.rtime}</div>
+            </div>
+            `
+    }
+    console.log(str)
+    document.getElementById('root').innerHTML=str
+})
+    </script>
+    
+</body>
+</html>

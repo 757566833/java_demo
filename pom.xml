@@ -87,7 +87,7 @@
         <jacoco.version>0.7.3.201502191951</jacoco.version>
 
         <fastjson.version>1.2.7</fastjson.version>
-        <jackson.version>2.6.0</jackson.version>
+        <jackson.version>2.12.1</jackson.version>
 
         <guice.version>4.1.0</guice.version>
         <guava.version>19.0</guava.version>
